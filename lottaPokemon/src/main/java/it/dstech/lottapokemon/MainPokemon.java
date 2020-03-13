@@ -3,6 +3,8 @@ package it.dstech.lottapokemon;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+
+
 public class MainPokemon {
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
@@ -17,10 +19,23 @@ public class MainPokemon {
 				gestione.insertPokemon(nuovoPokemon(input));
 				break;
 			}
+			case 2:{
+				gestione.deletePokemon(scegliId(input, gestione));
+				break;
+			}
+			case 3:{
+				gestione.retrivePokemon();
+			}
 			}
 		}
 	}
-
+	public static int scegliId (Scanner input, Gestione gestione) throws SQLException {
+		gestione.retrivePokemon();
+		System.out.println("Scegli l'ID del pokemon");
+		int scelta = input.nextInt();	
+		input.nextLine();
+		return scelta;
+	}
 	public static Pokemon nuovoPokemon(Scanner input) {
 		System.out.println("Inserisci il NOME del tuo Pokemon");
 		String nome = input.nextLine();

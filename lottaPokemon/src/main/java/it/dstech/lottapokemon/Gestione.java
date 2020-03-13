@@ -24,7 +24,7 @@ public class Gestione {
 	}
 
 	public void insertPokemon(Pokemon pokemon) throws SQLException {
-		String queryInserimentoPokemon = "INSERT INTO `L4RZNtuhbB`.`digimomn` (`nome`, `HP`, `ATK`, `DEF`, `RES`, `EVO`, `owner`, `tipo` ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+		String queryInserimentoPokemon = "INSERT INTO `L4RZNtuhbB`.`digimon` (`nome`, `HP`, `ATK`, `DEF`, `RES`, `EVO`, `owner`, `tipo` ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoPokemon);
 		prepareStatement.setString(1, pokemon.getNome());
 		prepareStatement.setInt(2, pokemon.getHp());
