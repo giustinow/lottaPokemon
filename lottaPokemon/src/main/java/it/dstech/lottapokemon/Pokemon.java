@@ -6,19 +6,19 @@ public class Pokemon {
 	private int hp;
 	private int attacco;
 	private int difesa;
-	private int velocita;
+	private int resistenza;
 	private String evoluzione;
 	private String proprietario;
 	private String tipo;
 
-	public Pokemon(String nome, int hp, int attacco, int difesa, int velocita, String evoluzione, String proprietario,
+	public Pokemon(String nome, int hp, int attacco, int difesa, int resistenza, String evoluzione, String proprietario,
 			String tipo) {
 		super();
 		this.nome = nome;
 		this.hp = hp;
 		this.attacco = attacco;
 		this.difesa = difesa;
-		this.velocita = velocita;
+		this.resistenza = resistenza;
 		this.evoluzione = evoluzione;
 		this.proprietario = proprietario;
 		this.tipo = tipo;
@@ -72,12 +72,12 @@ public class Pokemon {
 		this.difesa = difesa;
 	}
 
-	public int getVelocita() {
-		return velocita;
+	public int getResistenza() {
+		return resistenza;
 	}
 
-	public void setVelocita(int velocita) {
-		this.velocita = velocita;
+	public void setResistenza(int resistenza) {
+		this.resistenza = resistenza;
 	}
 
 	public String getEvoluzione() {
@@ -123,8 +123,8 @@ public class Pokemon {
 
 	@Override
 	public String toString() {
-		return "Pokemon [nome=" + nome + ", hp=" + hp + ", attacco=" + attacco + ", difesa=" + difesa + ", velocita="
-				+ velocita + ", evoluzione=" + evoluzione + ", proprietario=" + proprietario + ", tipo=" + tipo + "]";
+		return "Pokemon [nome=" + nome + ", hp=" + hp + ", attacco=" + attacco + ", difesa=" + difesa + ", resistenza="
+				+ resistenza + ", evoluzione=" + evoluzione + ", proprietario=" + proprietario + ", tipo=" + tipo + "]";
 	}
 
 
