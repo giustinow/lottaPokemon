@@ -27,7 +27,10 @@ public class MainPokemon {
 				Pokemon nuovoPokemon = nuovoPokemon(input);
 				if (!gestione.checkPersona(sceltaUtente)) {
 					if (gestione.checkPokemon(nuovoPokemon)) {
-						gestione.insertPokemon(nuovoPokemon, sceltaUtente);
+						System.out.println("Inserisci ID pokemon");
+						int id = input.nextInt();
+						input.nextLine();
+						gestione.insertPokemon(id, nuovoPokemon, sceltaUtente);
 					} else {
 						System.out.println("Pokemon già presente");
 					}
@@ -51,13 +54,32 @@ public class MainPokemon {
 			case 6:{
 				gestione.retriveUtente();
 				break;
+			}case 7:{
+				creaPartita(input, gestione);
+				break;
 			}
+			
 			}
 		}
 	}
 	
+	public static void creaPartita(Scanner input, Gestione gestione) throws SQLException {
+		System.out.println("Inserisci l'ID della partita");
+		String idPartita = input.nextLine();
+		Utente sceltaUtente = sceltaUtente(input, gestione);
+		System.out.println("Scegli i 3 pokemon che devono combattere");
+		gestione.retrivePokemon();
+		System.out.println("Inserisci il 1°");
+		String dc1 = input.nextLine();
+		System.out.println("Inserisci il 2°");
+		String dc2 = input.nextLine();
+		System.out.println("Inserisci il 3°");
+		String dc3 = input.nextLine();
+		gestione.insertPartita(idPartita, sceltaUtente.getId(), dc1, dc2, dc3);
+	}
+
 	public static Utente sceltaUtente(Scanner input, Gestione gestione) throws SQLException {
-		System.out.println("Scegli l'utenti tra gli utenti registrati");
+		System.out.println("Scegli l'utente tra gli utenti registrati");
 		gestione.retriveUtente();
 		return new Utente(input.nextLine(), "");
 	}
@@ -129,7 +151,8 @@ public class MainPokemon {
 		System.out.println("4. Rimuovi utente registrato");
 		System.out.println("5. Stampa la lista dei Pokemon");
 		System.out.println("6. Stampa la lista dei Pokemon");
-		System.out.println("7. ");
+		System.out.println("7. Crea una nuova partita");
+		System.out.println("8. Partecipa ad una partita");
 		System.out.println("************************************************************************");
 
 	}

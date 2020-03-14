@@ -18,7 +18,8 @@ public class Gestione {
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		this.username = "L4RZNtuhbB";
 		this.password = "YxHvHv0NUT";
-		this.url = "jdbc:mysql://remotemysql.com:3306/L4RZNtuhbB?useUnicode=true&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false";
+		this.url = "jdbc:mysql://remotemysql.com:3306/L4RZNtuhbB?useUnicode=true&useLegacyDatetime"
+				+ "Code=false&serverTimezone=UTC&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false";
 		this.connessione = DriverManager.getConnection(url, username, password);
 		this.statement = connessione.createStatement();
 	}
@@ -31,10 +32,10 @@ public class Gestione {
 		prepareStatement.execute();
 	}
 
-	public void insertPokemon(Pokemon pokemon, Utente utente) throws SQLException {
+	public void insertPokemon(int id, Pokemon pokemon, Utente utente) throws SQLException {
 		String queryInserimentoPokemon = "INSERT INTO `L4RZNtuhbB`.`digimon` (`iddigimon`, `nome`, `HP`, `ATK`, `DEF`, `RES`, `EVO`, `tipo`, `idUtenti` ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoPokemon);
-		prepareStatement.setInt(1, 2);
+		prepareStatement.setInt(1, id);
 		prepareStatement.setString(2, pokemon.getNome());
 		prepareStatement.setInt(3, pokemon.getHp());
 		prepareStatement.setInt(4, pokemon.getAttacco());
@@ -43,6 +44,17 @@ public class Gestione {
 		prepareStatement.setString(7, pokemon.getEvoluzione());
 		prepareStatement.setString(8, pokemon.getTipo());
 		prepareStatement.setString(9, utente.getId());
+		prepareStatement.execute();
+	}
+
+	public void insertPartita(String idPartita, String creatore, String dc1, String dc2, String dc3) throws SQLException {
+		String queryInserimentoPartita = "INSERT INTO `L4RZNtuhbB`.`Partite` (`idpartita`, `idcreatore`, `dc1`, `dc2`, `dc3`) VALUES (?, ?, ?, ?, ?);";
+		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoPartita);
+		prepareStatement.setString(1, idPartita);
+		prepareStatement.setString(2, creatore);
+		prepareStatement.setString(3, dc1);
+		prepareStatement.setString(4, dc2);
+		prepareStatement.setString(5, dc3);
 		prepareStatement.execute();
 	}
 
@@ -115,9 +127,7 @@ public class Gestione {
 		}
 	}
 
-	public void sceltaPokemon(boolean x) {
-		if (x) {
-			String queryInserimentoPokemon = "INSERT INTO `L4RZNtuhbB`.`Partite` (dc1, dc2, dc3) SELECT `nome` FROM `L4RZNtuhbB`.`Partite` ";
-		}
+	public void creaPartita(String creatore) {
+
 	}
 }
