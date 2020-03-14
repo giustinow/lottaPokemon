@@ -25,7 +25,7 @@ public class MainPokemon {
 			case 2: {
 				Utente sceltaUtente = sceltaUtente(input, gestione);
 				Pokemon nuovoPokemon = nuovoPokemon(input);
-				if (gestione.checkPersona(sceltaUtente)) {
+				if (!gestione.checkPersona(sceltaUtente)) {
 					if (gestione.checkPokemon(nuovoPokemon)) {
 						gestione.insertPokemon(nuovoPokemon, sceltaUtente);
 					} else {

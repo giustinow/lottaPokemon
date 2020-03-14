@@ -32,7 +32,7 @@ public class Gestione {
 	}
 
 	public void insertPokemon(Pokemon pokemon, Utente utente) throws SQLException {
-		String queryInserimentoPokemon = "INSERT INTO `L4RZNtuhbB`.`digimon` (`iddigimon`, `nome`, `HP`, `ATK`, `DEF`, `RES`, `EVO`, `tipo`, `idUtente` ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		String queryInserimentoPokemon = "INSERT INTO `L4RZNtuhbB`.`digimon` (`iddigimon`, `nome`, `HP`, `ATK`, `DEF`, `RES`, `EVO`, `tipo`, `idUtenti` ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoPokemon);
 		prepareStatement.setInt(1, 2);
 		prepareStatement.setString(2, pokemon.getNome());
@@ -41,8 +41,8 @@ public class Gestione {
 		prepareStatement.setInt(5, pokemon.getDifesa());
 		prepareStatement.setInt(6, pokemon.getResistenza());
 		prepareStatement.setString(7, pokemon.getEvoluzione());
-		prepareStatement.setString(8, utente.getId());
-		prepareStatement.setString(9, pokemon.getTipo());
+		prepareStatement.setString(8, pokemon.getTipo());
+		prepareStatement.setString(9, utente.getId());
 		prepareStatement.execute();
 	}
 
@@ -109,7 +109,7 @@ public class Gestione {
 			int res = risultatoQuery.getInt("RES");
 			String evoluzione = risultatoQuery.getString("EVO");
 			String tipo = risultatoQuery.getString("tipo");
-			String owner = risultatoQuery.getString("idutente");
+			String owner = risultatoQuery.getString("idUtenti");
 			System.out.println("[ " + autoIncKeyFromFunc + " ] " + nome + " " + hp + " " + atk + " " + def + " " + res
 					+ " " + evoluzione + " " + tipo + " " + owner);
 		}
