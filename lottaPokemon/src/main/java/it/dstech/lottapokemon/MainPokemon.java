@@ -126,9 +126,10 @@ public class MainPokemon {
 		System.out.println("1. Registra utente");
 		System.out.println("2. Inserisci un nuovo Pokemon da mettere al centro Pokemon");
 		System.out.println("3. Rimuovi il Pokemon dal centro Pokemon");
-		System.out.println("4. Stampa la lista di tutti i Pokemon");
-		System.out.println("5. Crea un nuovo utente");
-		System.out.println("6. Aggiungi Pokemon come sfidante");
+		System.out.println("4. Rimuovi utente registrato");
+		System.out.println("5. Stampa la lista dei Pokemon");
+		System.out.println("6. Stampa la lista dei Pokemon");
+		System.out.println("7. ");
 		System.out.println("************************************************************************");
 
 	}

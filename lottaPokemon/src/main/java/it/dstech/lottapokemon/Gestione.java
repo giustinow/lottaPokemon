@@ -98,7 +98,7 @@ public class Gestione {
 	public void retrivePokemon() throws SQLException {
 		ResultSet risultatoQuery = statement.executeQuery("select * from `L4RZNtuhbB`.`digimon`");
 		System.out.println(" ID " + " " + "  nome  " + " " + " HP" + "" + " ATK " + "" + "DEF " + "" + "RES " + ""
-				+ "EVO " + "" + "idUtente " + "" + "tipo");
+				+ "EVO " + "" + "tipo" + "" + "idUtente ");
 		System.out.println("------------------------------------------");
 		while (risultatoQuery.next()) {
 			int autoIncKeyFromFunc = risultatoQuery.getInt(1);
