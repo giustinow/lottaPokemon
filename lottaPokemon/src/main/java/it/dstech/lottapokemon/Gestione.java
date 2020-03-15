@@ -23,7 +23,6 @@ public class Gestione {
 		this.connessione = DriverManager.getConnection(url, username, password);
 		this.statement = connessione.createStatement();
 	}
-
 	public void insertUtente(Utente utente) throws SQLException {
 		String queryInserimentoPokemon = "INSERT INTO `L4RZNtuhbB`.`Utenti` (`idUtenti`, `nome`) VALUES (?, ?);";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoPokemon);
@@ -46,8 +45,11 @@ public class Gestione {
 		prepareStatement.setString(9, utente.getId());
 		prepareStatement.execute();
 	}
+	public void insertCreaScontro() {
+		
+	}
 
-	public void insertPartita(String idPartita, String creatore, String dc1, String dc2, String dc3) throws SQLException {
+	public void insertCreaPartita(String idPartita, String creatore, String dc1, String dc2, String dc3) throws SQLException {
 		String queryInserimentoPartita = "INSERT INTO `L4RZNtuhbB`.`Partite` (`idpartita`, `idcreatore`, `dc1`, `dc2`, `dc3`) VALUES (?, ?, ?, ?, ?);";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoPartita);
 		prepareStatement.setString(1, idPartita);
@@ -55,6 +57,16 @@ public class Gestione {
 		prepareStatement.setString(3, dc1);
 		prepareStatement.setString(4, dc2);
 		prepareStatement.setString(5, dc3);
+		prepareStatement.execute();
+	}
+	public void insertPartecipaPartita(String idPartecipante, String idPartita, String ds1, String ds2, String ds3) throws SQLException {
+		String queryPartecipaPartita = "UPDATE `L4RZNtuhbB`.`Partite` SET `idsfidante` = ?, `ds1` = ?, `ds2` = ?, `ds3` = ? WHERE (`idpartita` = ?);";
+		PreparedStatement prepareStatement = connessione.prepareStatement(queryPartecipaPartita);
+		prepareStatement.setString(1, idPartecipante);
+		prepareStatement.setString(2, ds1);
+		prepareStatement.setString(3, ds2);
+		prepareStatement.setString(4, ds3);
+		prepareStatement.setString(5, idPartita);
 		prepareStatement.execute();
 	}
 
@@ -100,13 +112,35 @@ public class Gestione {
 
 	public void retriveUtente() throws SQLException {
 		ResultSet risultatoQuery = statement.executeQuery("select * from Utenti");
+		System.out.println(" ID " + "  " + "  nome");
+		System.out.println("--------------------");
 		while (risultatoQuery.next()) {
 			String id = risultatoQuery.getString("idUtenti");
 			String nome = risultatoQuery.getString("nome");
-			System.out.println(id + " " + nome);
+			System.out.println("[ " + id + " ]" + " " + nome);
 		}
 	}
-
+	public void retrivePokemonUtente(Utente idUtente) throws SQLException {
+		PreparedStatement prepareStatement = connessione.prepareStatement("select * from `L4RZNtuhbB`.`digimon` where idUtenti = ?");
+		prepareStatement.setString(1, idUtente.getId());
+		ResultSet risultato = prepareStatement.executeQuery();
+		System.out.println(" ID " + " " + "  nome  " + " " + " HP" + "" + " ATK " + "" + "DEF " + "" + "RES " + ""
+				+ "EVO " + "" + "tipo" + "" + "idUtente ");
+		System.out.println("------------------------------------------");
+		while (risultato.next()) {
+			int autoIncKeyFromFunc = risultato.getInt(1);
+			String nome = risultato.getString("nome");
+			int hp = risultato.getInt("HP");
+			int atk = risultato.getInt("ATK");
+			int def = risultato.getInt("DEF");
+			int res = risultato.getInt("RES");
+			String evoluzione = risultato.getString("EVO");
+			String tipo = risultato.getString("tipo");
+			String owner = risultato.getString("idUtenti");
+			System.out.println("[ " + autoIncKeyFromFunc + " ] " + nome + " " + hp + " " + atk + " " + def + " " + res
+					+ " " + evoluzione + " " + tipo + " " + owner);
+		}
+	}
 	public void retrivePokemon() throws SQLException {
 		ResultSet risultatoQuery = statement.executeQuery("select * from `L4RZNtuhbB`.`digimon`");
 		System.out.println(" ID " + " " + "  nome  " + " " + " HP" + "" + " ATK " + "" + "DEF " + "" + "RES " + ""
@@ -125,9 +159,5 @@ public class Gestione {
 			System.out.println("[ " + autoIncKeyFromFunc + " ] " + nome + " " + hp + " " + atk + " " + def + " " + res
 					+ " " + evoluzione + " " + tipo + " " + owner);
 		}
-	}
-
-	public void creaPartita(String creatore) {
-
 	}
 }

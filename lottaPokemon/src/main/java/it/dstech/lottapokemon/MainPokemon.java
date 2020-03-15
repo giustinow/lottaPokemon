@@ -34,7 +34,7 @@ public class MainPokemon {
 					} else {
 						System.out.println("Pokemon già presente");
 					}
-				}else {
+				} else {
 					System.out.println("Id inesistente");
 				}
 				break;
@@ -51,31 +51,49 @@ public class MainPokemon {
 				gestione.retrivePokemon();
 				break;
 			}
-			case 6:{
+			case 6: {
 				gestione.retriveUtente();
 				break;
-			}case 7:{
+			}
+			case 7: {
 				creaPartita(input, gestione);
 				break;
 			}
-			
+			case 8: {
+				partecipaPartita(input, gestione);
+				break;
+			}
 			}
 		}
 	}
-	
+
+	private static void partecipaPartita(Scanner input, Gestione gestione) throws SQLException {
+		System.out.println("Inserisci l'id della partita in cui vuoi partecipare");
+		String idPartita = input.nextLine();
+		Utente sceltaUtente = sceltaUtente(input, gestione);
+		gestione.retrivePokemonUtente(sceltaUtente);
+		System.out.println("Inserisci il 1°");
+		String ds1 = input.nextLine();
+		System.out.println("Inserisci il 2°");
+		String ds2 = input.nextLine();
+		System.out.println("Inserisci il 3°");
+		String ds3 = input.nextLine();
+		gestione.insertPartecipaPartita(sceltaUtente.getId(), idPartita, ds1, ds2, ds3);
+	}
+
 	public static void creaPartita(Scanner input, Gestione gestione) throws SQLException {
-		System.out.println("Inserisci l'ID della partita");
+		System.out.println("Inserisci l'ID della partita");// id partita e id creatore a cosa corrispondono?
 		String idPartita = input.nextLine();
 		Utente sceltaUtente = sceltaUtente(input, gestione);
 		System.out.println("Scegli i 3 pokemon che devono combattere");
-		gestione.retrivePokemon();
+		gestione.retrivePokemonUtente(sceltaUtente);
 		System.out.println("Inserisci il 1°");
 		String dc1 = input.nextLine();
 		System.out.println("Inserisci il 2°");
 		String dc2 = input.nextLine();
 		System.out.println("Inserisci il 3°");
 		String dc3 = input.nextLine();
-		gestione.insertPartita(idPartita, sceltaUtente.getId(), dc1, dc2, dc3);
+		gestione.insertCreaPartita(idPartita, sceltaUtente.getId(), dc1, dc2, dc3);
 	}
 
 	public static Utente sceltaUtente(Scanner input, Gestione gestione) throws SQLException {
@@ -91,11 +109,13 @@ public class MainPokemon {
 		String nome = input.nextLine();
 		return new Utente(idUtente, nome);
 	}
-	public static String scegliIdUtente(Scanner input,Gestione gestione) throws SQLException {
+
+	public static String scegliIdUtente(Scanner input, Gestione gestione) throws SQLException {
 		System.out.println("Scegli l'ID dell'utente");
 		gestione.retriveUtente();
 		return input.nextLine();
 	}
+
 	public static int scegliIdPokemon(Scanner input, Gestione gestione) throws SQLException {
 		System.out.println("Scegli l'ID del pokemon");
 		gestione.retrivePokemon();
@@ -109,7 +129,7 @@ public class MainPokemon {
 		int hp = randomHP(input);
 		int attacco = randomAttacco(input);
 		int difesa = randomDifesa(input);
-		int resistenza = randomAttacco(input);
+		int resistenza = randomResistenza(input);
 		System.out.println("Inserisci lo stadio di evoluzione del Pokemon");
 		String evoluzione = input.nextLine();
 		System.out.println("Inserisci l'ID del proprietario del Pokemon (idUtente)");
@@ -122,6 +142,15 @@ public class MainPokemon {
 	public static int randomHP(Scanner input) {
 		double max = 600.0;
 		double min = 500.0;
+
+		int x = (int) ((int) (Math.random() * ((max - min) + 1)) + min);
+
+		return x;
+	}
+
+	public static int randomResistenza(Scanner input) {
+		double max = 5.0;
+		double min = 10.0;
 
 		int x = (int) ((int) (Math.random() * ((max - min) + 1)) + min);
 
@@ -143,8 +172,8 @@ public class MainPokemon {
 	}
 
 	public static void menu() {
-		System.out.println("Scegli cosa fare");
 		System.out.println("************************************************************************");
+		System.out.println("Scegli cosa fare");
 		System.out.println("1. Registra utente");
 		System.out.println("2. Inserisci un nuovo Pokemon da mettere al centro Pokemon");
 		System.out.println("3. Rimuovi il Pokemon dal centro Pokemon");
