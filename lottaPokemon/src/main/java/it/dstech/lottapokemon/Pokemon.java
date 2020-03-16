@@ -1,7 +1,7 @@
 package it.dstech.lottapokemon;
 
 public class Pokemon {
-
+	private int id;
 	private String nome;
 	private int hp;
 	private int attacco;
@@ -11,9 +11,10 @@ public class Pokemon {
 	private String proprietario;
 	private String tipo;
 
-	public Pokemon(String nome, int hp, int attacco, int difesa, int resistenza, String evoluzione, String proprietario,
-			String tipo) {
+	public Pokemon(int id, String nome, int hp, int attacco, int difesa, int resistenza, String evoluzione,
+			String proprietario, String tipo) {
 		super();
+		this.id = id;
 		this.nome = nome;
 		this.hp = hp;
 		this.attacco = attacco;
@@ -88,14 +89,11 @@ public class Pokemon {
 		this.evoluzione = evoluzione;
 	}
 
-	
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		result = prime * result + ((proprietario == null) ? 0 : proprietario.hashCode());
+		result = prime * result + id;
 		return result;
 	}
 
@@ -108,15 +106,7 @@ public class Pokemon {
 		if (getClass() != obj.getClass())
 			return false;
 		Pokemon other = (Pokemon) obj;
-		if (nome == null) {
-			if (other.nome != null)
-				return false;
-		} else if (!nome.equals(other.nome))
-			return false;
-		if (proprietario == null) {
-			if (other.proprietario != null)
-				return false;
-		} else if (!proprietario.equals(other.proprietario))
+		if (id != other.id)
 			return false;
 		return true;
 	}
@@ -127,6 +117,12 @@ public class Pokemon {
 				+ resistenza + ", evoluzione=" + evoluzione + ", proprietario=" + proprietario + ", tipo=" + tipo + "]";
 	}
 
+	public int getId() {
+		return id;
+	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
 
 }
