@@ -13,6 +13,7 @@ public class Gestione {
 	private String url;
 	private Connection connessione;
 	private Statement statement;
+	private boolean turno = true;
 
 	public Gestione() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.cj.jdbc.Driver");
@@ -38,9 +39,9 @@ public class Gestione {
 		prepareStatement.setInt(1, pokemon.getId());
 		prepareStatement.setString(2, pokemon.getNome());
 		prepareStatement.setInt(3, pokemon.getHp());
-		prepareStatement.setInt(4, pokemon.getAttacco());
-		prepareStatement.setInt(5, pokemon.getDifesa());
-		prepareStatement.setInt(6, pokemon.getResistenza());
+		prepareStatement.setDouble(4, pokemon.getAttacco());
+		prepareStatement.setDouble(5, pokemon.getDifesa());
+		prepareStatement.setDouble(6, pokemon.getResistenza());
 		prepareStatement.setString(7, pokemon.getEvoluzione());
 		prepareStatement.setString(8, pokemon.getTipo());
 		prepareStatement.setString(9, utente.getId());
@@ -80,40 +81,83 @@ public class Gestione {
 	}
 
 	public void creaSfidaPokemon(int idPartita) throws SQLException, InterruptedException {////////////////////////////////
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 10; i++) {
 			turnoCreatore(idPartita);
 			System.out.println("Finito turno creatore");
+			Thread.sleep(200);
+			if (!turnoCreatore(idPartita)) {
+				System.out.println("Giustino hai vinto e la pippa del tuo avversario ha perso");
+				return;
+			}
 			turnoAvversario(idPartita);
 			System.out.println("Finito turno avversario");
-			Thread.sleep(2000);
+			Thread.sleep(200);
+			if (!turnoAvversario(idPartita)) {
+				System.out.println("Hey la pippa ha vinto, purtroppo Giustino ha perso");
+				return;
+			}
 		}
 
 	}
 
-	public void turnoCreatore(int idPartita) throws SQLException {
-		String queryInserimentoScontro = "INSERT INTO `L4RZNtuhbB`.`Scontro` (`OWNER`, `digimonA`, `digimonD`, `idpartita`) VALUES (?, ?, ?, ?);";
-		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
-		Partita retrievePartita = retrieveOggettoPartita(idPartita);
-		Pokemon retrievePokemonPartita = retrievePokemonPartitaCreatore(retrievePartita.getPokemonCreatore1());
-		Pokemon retrievePokemonPartitaSfidante = retrievePokemonPartitaSfidante(retrievePartita.getPokemonSfidante1());
-		prepareStatement.setString(1, retrievePartita.getIdCreatore());
-		prepareStatement.setString(2, retrievePokemonPartita.getNome());
-		prepareStatement.setString(3, retrievePokemonPartitaSfidante.getNome());
-		prepareStatement.setInt(4, idPartita);
-		prepareStatement.execute();
+	public int attaccaPokemonDiCreatore(Pokemon pokemonCreatore, Pokemon pokemonAvversario) {
+		if (pokemonAvversario.getTipo().equals(pokemonCreatore.getTipo())) {
+			return (int) (pokemonCreatore.getHp() - pokemonAvversario.attaccoNormale());
+		} else if (pokemonAvversario.vantaggioTipoPokemon(pokemonCreatore)) {
+			return (int) (pokemonCreatore.getHp() - pokemonAvversario.attaccoForte());
+		}
+		return (int) (pokemonCreatore.getHp() - pokemonAvversario.attaccoScarso());
 	}
 
-	public void turnoAvversario(int idPartita) throws SQLException {
+	public int attaccaPokemonDiAvversario(Pokemon pokemonCreatore, Pokemon pokemonAvversario) {
+		if (pokemonCreatore.getTipo().equals(pokemonAvversario.getTipo())) {
+			return (int) (pokemonAvversario.getHp() - pokemonCreatore.attaccoNormale());
+		} else if (pokemonCreatore.vantaggioTipoPokemon(pokemonAvversario)) {
+			return (int) (pokemonAvversario.getHp() - pokemonCreatore.attaccoForte());
+		}
+		return (int) (pokemonAvversario.getHp() - pokemonCreatore.attaccoScarso());
+	}
+
+	public boolean turnoCreatore(int idPartita) throws SQLException {
 		String queryInserimentoScontro = "INSERT INTO `L4RZNtuhbB`.`Scontro` (`OWNER`, `digimonA`, `digimonD`, `idpartita`) VALUES (?, ?, ?, ?);";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
 		Partita retrievePartita = retrieveOggettoPartita(idPartita);
 		Pokemon retrievePokemonPartita = retrievePokemonPartitaCreatore(retrievePartita.getPokemonCreatore1());
 		Pokemon retrievePokemonPartitaSfidante = retrievePokemonPartitaSfidante(retrievePartita.getPokemonSfidante1());
-		prepareStatement.setString(1, retrievePartita.getIdCreatore());
-		prepareStatement.setString(2, retrievePokemonPartitaSfidante.getNome());
-		prepareStatement.setString(3, retrievePokemonPartita.getNome());
-		prepareStatement.setInt(4, idPartita);
-		prepareStatement.execute();
+		if (retrievePokemonPartitaSfidante.getHp() > 0) {
+			if (turno) {
+				attaccaPokemonDiAvversario(retrievePokemonPartita, retrievePokemonPartitaSfidante);
+				prepareStatement.setString(1, retrievePartita.getIdCreatore());
+				prepareStatement.setString(2, retrievePokemonPartita.getNome());
+				prepareStatement.setString(3, retrievePokemonPartitaSfidante.getNome());
+				prepareStatement.setInt(4, idPartita);
+				prepareStatement.execute();
+				turno = false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public boolean turnoAvversario(int idPartita) throws SQLException {
+		String queryInserimentoScontro = "INSERT INTO `L4RZNtuhbB`.`Scontro` (`OWNER`, `digimonA`, `digimonD`, `idpartita`) VALUES (?, ?, ?, ?);";
+		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
+		Partita retrievePartita = retrieveOggettoPartita(idPartita);
+		Pokemon retrievePokemonPartita = retrievePokemonPartitaCreatore(retrievePartita.getPokemonCreatore1());
+		Pokemon retrievePokemonPartitaSfidante = retrievePokemonPartitaSfidante(retrievePartita.getPokemonSfidante1());
+		if (retrievePokemonPartita.getHp() > 0) {
+			if (!turno) {
+				attaccaPokemonDiCreatore(retrievePokemonPartita, retrievePokemonPartitaSfidante);
+				prepareStatement.setString(1, retrievePartita.getIdSfidante());
+				prepareStatement.setString(2, retrievePokemonPartitaSfidante.getNome());
+				prepareStatement.setString(3, retrievePokemonPartita.getNome());
+				prepareStatement.setInt(4, idPartita);
+				prepareStatement.execute();
+				turno = true;
+			}
+			return true;
+		}
+		return false;
 	}
 
 	public Pokemon retrievePokemonPartitaCreatore(int idPokemon) throws SQLException {
@@ -218,14 +262,6 @@ public class Gestione {
 			}
 		}
 		return true;
-
-	}
-
-	public void attaccaPokemon() {
-
-	}
-
-	public void difendiPokemon() {
 
 	}
 
