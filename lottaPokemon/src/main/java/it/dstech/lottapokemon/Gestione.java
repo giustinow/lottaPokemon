@@ -13,7 +13,6 @@ public class Gestione {
 	private String url;
 	private Connection connessione;
 	private Statement statement;
-	private boolean turno = true;
 
 	public Gestione() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.cj.jdbc.Driver");
@@ -77,80 +76,57 @@ public class Gestione {
 		prepareStatement.execute();
 	}
 
-	public void creaPrimoRound(int idPartita) throws SQLException {
+	public void creazioneNuovoRound(int idPartita, Pokemon pokemonCreatore, Pokemon pokemonSfidante)
+			throws SQLException {
 		String queryInserimentoScontro = "INSERT INTO L4RZNtuhbB.Scontro_JustineProva (`OWNER`, `digimonA`, `digimonD`, `idpartita`, `HPdigimonA`, `HPdigimonD`) VALUES (?,?,?,?,?,?);";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
-		Partita retrievePartita = retrieveOggettoPartita(idPartita);
-		Pokemon retrievePokemonPartita = retrievePokemonPartitaCreatore(retrievePartita.getPokemonCreatore1());
-		Pokemon retrievePokemonPartitaSfidante = retrievePokemonPartitaSfidante(retrievePartita.getPokemonSfidante1());
-		prepareStatement.setString(1, retrievePartita.getIdCreatore());
-		prepareStatement.setString(2, retrievePokemonPartita.getNome());
-		prepareStatement.setString(3, retrievePokemonPartitaSfidante.getNome());
+		prepareStatement.setString(1, retrieveOggettoPartita(idPartita).getIdCreatore());
+		prepareStatement.setString(2, pokemonCreatore.getNome());
+		prepareStatement.setString(3, pokemonSfidante.getNome());
 		prepareStatement.setInt(4, idPartita);
-		prepareStatement.setInt(5, retrievePokemonPartita.getHp());
-		prepareStatement.setInt(6, retrievePokemonPartitaSfidante.getHp());
+		prepareStatement.setInt(5, pokemonCreatore.getHp());
+		prepareStatement.setInt(6, pokemonSfidante.getHp());
 		prepareStatement.execute();
 	}
 
-	public void creaSecondoRound(int idPartita) throws SQLException {
-		String queryInserimentoScontro = "INSERT INTO L4RZNtuhbB.Scontro_JustineProva (`OWNER`, `digimonA`, `digimonD`, `idpartita`, `HPdigimonA`, `HPdigimonD`) VALUES (?,?,?,?,?,?);";
-		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
-		Partita retrievePartita = retrieveOggettoPartita(idPartita);
-		Pokemon retrievePokemonPartita = retrievePokemonPartitaCreatore(retrievePartita.getPokemonCreatore2());
-		Pokemon retrievePokemonPartitaSfidante = retrievePokemonPartitaSfidante(retrievePartita.getPokemonSfidante2());
-		prepareStatement.setString(1, retrievePartita.getIdCreatore());
-		prepareStatement.setString(2, retrievePokemonPartita.getNome());
-		prepareStatement.setString(3, retrievePokemonPartitaSfidante.getNome());
-		prepareStatement.setInt(4, idPartita);
-		prepareStatement.setInt(5, retrievePokemonPartita.getHp());
-		prepareStatement.setInt(6, retrievePokemonPartitaSfidante.getHp());
-		prepareStatement.execute();
-	}
-
-	public void creaTerzoRound(int idPartita) throws SQLException {
-		String queryInserimentoScontro = "INSERT INTO L4RZNtuhbB.Scontro_JustineProva (`OWNER`, `digimonA`, `digimonD`, `idpartita`, `HPdigimonA`, `HPdigimonD`) VALUES (?,?,?,?,?,?);";
-		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
-		Partita retrievePartita = retrieveOggettoPartita(idPartita);
-		Pokemon retrievePokemonPartita = retrievePokemonPartitaCreatore(retrievePartita.getPokemonCreatore3());
-		Pokemon retrievePokemonPartitaSfidante = retrievePokemonPartitaSfidante(retrievePartita.getPokemonSfidante3());
-		prepareStatement.setString(1, retrievePartita.getIdCreatore());
-		prepareStatement.setString(2, retrievePokemonPartita.getNome());
-		prepareStatement.setString(3, retrievePokemonPartitaSfidante.getNome());
-		prepareStatement.setInt(4, idPartita);
-		prepareStatement.setInt(5, retrievePokemonPartita.getHp());
-		prepareStatement.setInt(6, retrievePokemonPartitaSfidante.getHp());
-		prepareStatement.execute();
-	}
-
-	public void iniziaNuovoScontro(int idPartita) throws SQLException, InterruptedException {////////////////////////////////
+	public void iniziaNuovoScontro(int idPartita) throws SQLException, InterruptedException {
 		switch (1) {
 		case 1: {
-			creaPrimoRound(idPartita);
+			Pokemon retrievePokemonPartitaCreatore = retrievePokemonPartitaCreatore(
+					retrieveOggettoPartita(idPartita).getPokemonCreatore1());
+			Pokemon retrievePokemonPartitaSfidante = retrievePokemonPartitaSfidante(
+					retrieveOggettoPartita(idPartita).getPokemonSfidante1());
+			creazioneNuovoRound(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante);
+// al posto del for, un do while senza il break, per permettere di passare al round successivo
 			for (int i = 0; i < 5; i++) {
-				aggiornaVitaCreatore(idPartita,
-						retrievePokemonPartitaCreatore(retrieveOggettoPartita(idPartita).getPokemonCreatore1()),
-						retrievePokemonPartitaSfidante(retrieveOggettoPartita(idPartita).getPokemonSfidante1()));
 				duplicateRow(idPartita);
+				aggiornaVitaCreatore(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante);
+				if (!aggiornaVitaSfidante(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante)) {
+					System.out.println("Giustino ha vinto");
+				}
 				System.out.println("Turno di Giustino");
 				Thread.sleep(200);
-				aggiornaVitaSfidante(idPartita,
-						retrievePokemonPartitaCreatore(retrieveOggettoPartita(idPartita).getPokemonCreatore1()),
-						retrievePokemonPartitaSfidante(retrieveOggettoPartita(idPartita).getPokemonSfidante1()));
 				duplicateRow(idPartita);
-				
+				aggiornaVitaSfidante(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante);
+				if (!aggiornaVitaCreatore(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante)) {
+					System.out.println("Giustino ha perso");
+				}
 				System.out.println("Turno dell'avversario");
 				Thread.sleep(200);
-
 			}
 			break;
 		}
-		
+
 		case 2: {
-			creaSecondoRound(idPartita);
+			creazioneNuovoRound(idPartita,
+					retrievePokemonPartitaCreatore(retrieveOggettoPartita(idPartita).getPokemonCreatore2()),
+					retrievePokemonPartitaSfidante(retrieveOggettoPartita(idPartita).getPokemonSfidante2()));
 
 		}
 		case 3: {
-			creaTerzoRound(idPartita);
+			creazioneNuovoRound(idPartita,
+					retrievePokemonPartitaCreatore(retrieveOggettoPartita(idPartita).getPokemonCreatore3()),
+					retrievePokemonPartitaSfidante(retrieveOggettoPartita(idPartita).getPokemonSfidante3()));
 			break;
 		}
 		}
@@ -159,7 +135,7 @@ public class Gestione {
 
 	public int attaccaPokemonDiAvversario(Pokemon pokemonCreatore, Pokemon pokemonAvversario) {
 		if (pokemonCreatore.getTipo().equals(pokemonAvversario.getTipo())) {
-			return pokemonCreatore.difesaNormale(pokemonAvversario);
+			return (int) pokemonCreatore.difesaNormale(pokemonAvversario);
 		} else if (pokemonCreatore.vantaggioTipoPokemon(pokemonAvversario)) {
 			return (int) pokemonCreatore.difesaForte(pokemonAvversario);
 		}
@@ -168,14 +144,13 @@ public class Gestione {
 
 	public boolean aggiornaVitaSfidante(int idPartita, Pokemon pokemonCreatore, Pokemon pokemonSfidante)
 			throws SQLException {
-		String queryInserimentoScontro = "UPDATE L4RZNtuhbB.Scontro_JustineProva SET OWNER = ?, digimonA = ?, digimonD = ?, idpartita = ?, HPdigimonA = HPdigimonD, HPdigimonD =  ?  ORDER BY idmossa DESC LIMIT 1;";
+		String queryInserimentoScontro = "UPDATE L4RZNtuhbB.Scontro_JustineProva SET OWNER = ?, digimonA = ?, digimonD = ?, idpartita = ?, HPdigimonA = HPdigimonD, HPdigimonD = HPdigimonD - ?  ORDER BY idmossa DESC LIMIT 1;";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
 		if (verificaHpPokemonDifesa() >= 0) {
 			prepareStatement.setString(1, retrieveOggettoPartita(idPartita).getIdSfidante());
 			prepareStatement.setString(2, pokemonCreatore.getNome());
 			prepareStatement.setString(3, pokemonSfidante.getNome());
 			prepareStatement.setInt(4, idPartita);
-//			prepareStatement.setInt(5, verificaHpPokemonAttacco());
 			prepareStatement.setInt(5, attaccaPokemonDiAvversario(pokemonCreatore, pokemonSfidante));
 			prepareStatement.execute();
 			return true;
@@ -183,16 +158,19 @@ public class Gestione {
 		return false;
 	}
 
+	public void evolviPokemon(int idPokemon) {
+
+	}
+
 	public boolean aggiornaVitaCreatore(int idPartita, Pokemon pokemonCreatore, Pokemon pokemonSfidante)
 			throws SQLException {
-		String queryInserimentoScontro = "UPDATE L4RZNtuhbB.Scontro_JustineProva SET OWNER = ?, digimonA = ?, digimonD = ?, idpartita = ?, HPdigimonA = HpdigimonA, HPdigimonD =  ? ORDER BY idmossa DESC LIMIT 1;";
+		String queryInserimentoScontro = "UPDATE L4RZNtuhbB.Scontro_JustineProva SET OWNER = ?, digimonA = ?, digimonD = ?, idpartita = ?, HPdigimonA = HpdigimonD, HPdigimonD =  HPdigimonA - ? ORDER BY idmossa DESC LIMIT 1;";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
 		if (verificaHpPokemonDifesa() >= 0) {
 			prepareStatement.setString(1, retrieveOggettoPartita(idPartita).getIdCreatore());
 			prepareStatement.setString(2, pokemonSfidante.getNome());
 			prepareStatement.setString(3, pokemonCreatore.getNome());
 			prepareStatement.setInt(4, idPartita);
-//			prepareStatement.setInt(5, verificaHpPokemonAttacco());
 			prepareStatement.setInt(5, attaccaPokemonDiAvversario(pokemonSfidante, pokemonCreatore));
 			prepareStatement.execute();
 			return true;
@@ -200,16 +178,7 @@ public class Gestione {
 		return false;
 	}
 
-	public int verificaHpPokemonAttacco() throws SQLException {
-		ResultSet risultatoQueryCreatore = statement
-				.executeQuery("SELECT HPdigimonA FROM L4RZNtuhbB.Scontro_JustineProva order by idmossa desc limit 1;");
-		while (risultatoQueryCreatore.next()) {
-			return risultatoQueryCreatore.getInt("HPdigimonA");
-		}
-		return 0;
-	}
-
-	public int verificaHpPokemonDifesa() throws SQLException {
+	public int verificaHpPokemonDifesa() throws SQLException {// verifica degli hp rimanenti dei pokemon in lotta
 		ResultSet risultatoQueryCreatore = statement
 				.executeQuery("SELECT HPdigimonD FROM L4RZNtuhbB.Scontro_JustineProva order by idmossa desc limit 1;");
 		while (risultatoQueryCreatore.next()) {
@@ -218,22 +187,9 @@ public class Gestione {
 		return 0;
 	}
 
-	public int updateLifePokemonCreatore(Pokemon pokemonCreatore, Pokemon pokemonAvversario) throws SQLException {
-		String queryPartecipaPartita = "UPDATE L4RZNtuhbB.Scontro_JustineProva SET HPdigimonD = HPdigimonD - ? ORDER BY idmossa DESC LIMIT 1;";
-		PreparedStatement prepareStatement = connessione.prepareStatement(queryPartecipaPartita);
-		prepareStatement.setInt(1, attaccaPokemonDiAvversario(pokemonCreatore, pokemonAvversario));
-		prepareStatement.execute();
-		return attaccaPokemonDiAvversario(pokemonCreatore, pokemonAvversario);
-	}
-
-	public int updateLifePokemonSfidante(Pokemon pokemonCreatore, Pokemon pokemonAvversario) throws SQLException {
-		String queryPartecipaPartita = "UPDATE L4RZNtuhbB.Scontro_JustineProva SET HPdigimonD = HPdigimonD - ? ORDER BY idmossa DESC LIMIT 1;";
-		PreparedStatement prepareStatement = connessione.prepareStatement(queryPartecipaPartita);
-		prepareStatement.setInt(1, attaccaPokemonDiAvversario(pokemonCreatore, pokemonAvversario));
-		return attaccaPokemonDiAvversario(pokemonCreatore, pokemonAvversario);
-	}
-
-	public Pokemon retrievePokemonPartitaCreatore(int idPokemon) throws SQLException {
+	public Pokemon retrievePokemonPartitaCreatore(int idPokemon) throws SQLException {// con la correzione di ieri mi
+																						// dava comunque un nullpointer
+																						// exception
 		ResultSet risultatoQueryCreatore = statement
 				.executeQuery("select * from L4RZNtuhbB.digimon where iddigimon = \"" + idPokemon + "\"");
 		int id = 0;
@@ -246,21 +202,23 @@ public class Gestione {
 		String tipo = "";
 		String idUtenti = "";
 		while (risultatoQueryCreatore.next()) {
-			 id = risultatoQueryCreatore.getInt("iddigimon");
-			 nome = risultatoQueryCreatore.getString("nome");
-			 hp = risultatoQueryCreatore.getInt("HP");
-			 atk = risultatoQueryCreatore.getInt("ATK");
-			 def = risultatoQueryCreatore.getInt("DEF");
-			 res = risultatoQueryCreatore.getInt("RES");
-			 evo = risultatoQueryCreatore.getString("EVO");
-			 tipo = risultatoQueryCreatore.getString("tipo");
-			 idUtenti = risultatoQueryCreatore.getString("idUtenti");
+			id = risultatoQueryCreatore.getInt("iddigimon");
+			nome = risultatoQueryCreatore.getString("nome");
+			hp = risultatoQueryCreatore.getInt("HP");
+			atk = risultatoQueryCreatore.getInt("ATK");
+			def = risultatoQueryCreatore.getInt("DEF");
+			res = risultatoQueryCreatore.getInt("RES");
+			evo = risultatoQueryCreatore.getString("EVO");
+			tipo = risultatoQueryCreatore.getString("tipo");
+			idUtenti = risultatoQueryCreatore.getString("idUtenti");
 		}
 		return new Pokemon(id, nome, hp, atk, def, res, evo, tipo, idUtenti);
 
 	}
 
-	public Pokemon retrievePokemonPartitaSfidante(int idPokemon) throws SQLException {
+	public Pokemon retrievePokemonPartitaSfidante(int idPokemon) throws SQLException {// con la correzione di ieri mi
+																						// dava comunque un nullpointer
+																						// exception
 		ResultSet risultatoQueryCreatore = statement
 				.executeQuery("select * from L4RZNtuhbB.digimon_JustineProva where iddigimon = \"" + idPokemon + "\"");
 		int id = 0;
@@ -273,20 +231,21 @@ public class Gestione {
 		String tipo = "";
 		String idUtenti = "";
 		while (risultatoQueryCreatore.next()) {
-			 id = risultatoQueryCreatore.getInt("iddigimon");
-			 nome = risultatoQueryCreatore.getString("nome");
-			 hp = risultatoQueryCreatore.getInt("HP");
-			 atk = risultatoQueryCreatore.getInt("ATK");
-			 def = risultatoQueryCreatore.getInt("DEF");
-			 res = risultatoQueryCreatore.getInt("RES");
-			 evo = risultatoQueryCreatore.getString("EVO");
-			 tipo = risultatoQueryCreatore.getString("tipo");
-			 idUtenti = risultatoQueryCreatore.getString("idUtenti");
+			id = risultatoQueryCreatore.getInt("iddigimon");
+			nome = risultatoQueryCreatore.getString("nome");
+			hp = risultatoQueryCreatore.getInt("HP");
+			atk = risultatoQueryCreatore.getInt("ATK");
+			def = risultatoQueryCreatore.getInt("DEF");
+			res = risultatoQueryCreatore.getInt("RES");
+			evo = risultatoQueryCreatore.getString("EVO");
+			tipo = risultatoQueryCreatore.getString("tipo");
+			idUtenti = risultatoQueryCreatore.getString("idUtenti");
 		}
 		return new Pokemon(id, nome, hp, atk, def, res, evo, tipo, idUtenti);
 	}
 
-	public Partita retrieveOggettoPartita(int idPartita) throws SQLException {
+	public Partita retrieveOggettoPartita(int idPartita) throws SQLException {// con la correzione di ieri mi dava
+																				// comunque un nullpointer exception
 		ResultSet risultatoQueryCreatore = statement.executeQuery(
 				"select idcreatore,idsfidante, dc1, dc2, dc3, ds1, ds2, ds3 from L4RZNtuhbB.Partite where idpartita = \""
 						+ idPartita + "\"");
