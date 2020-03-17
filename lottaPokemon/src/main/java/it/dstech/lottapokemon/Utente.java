@@ -2,11 +2,11 @@ package it.dstech.lottapokemon;
 
 public class Utente {
 	private String id;
-	private String Nome;
+	private String nome;
 	public Utente(String id, String nome) {
 		super();
 		this.id = id;
-		Nome = nome;
+		this.nome = nome;
 	}
 	public String getId() {
 		return id;
@@ -15,10 +15,10 @@ public class Utente {
 		this.id = id;
 	}
 	public String getNome() {
-		return Nome;
+		return nome;
 	}
 	public void setNome(String nome) {
-		Nome = nome;
+		this.nome = nome;
 	}
 	@Override
 	public int hashCode() {
@@ -45,7 +45,7 @@ public class Utente {
 	}
 	@Override
 	public String toString() {
-		return "Utente [id=" + id + ", Nome=" + Nome + "]";
+		return "Utente [id=" + id + ", Nome=" + nome + "]";
 	}
 	
 }

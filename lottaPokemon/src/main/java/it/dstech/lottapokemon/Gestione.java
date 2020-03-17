@@ -90,46 +90,37 @@ public class Gestione {
 	}
 
 	public void iniziaNuovoScontro(int idPartita) throws SQLException, InterruptedException {
-		switch (1) {
-		case 1: {
-			Pokemon retrievePokemonPartitaCreatore = retrievePokemonPartitaCreatore(
-					retrieveOggettoPartita(idPartita).getPokemonCreatore1());
-			Pokemon retrievePokemonPartitaSfidante = retrievePokemonPartitaSfidante(
-					retrieveOggettoPartita(idPartita).getPokemonSfidante1());
-			creazioneNuovoRound(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante);
+		
+		Pokemon retrievePokemonPartitaCreatore = retrievePokemonPartitaCreatore(
+				retrieveOggettoPartita(idPartita).getPokemonCreatore1());
+		Pokemon retrievePokemonPartitaSfidante = retrievePokemonPartitaSfidante(
+				retrieveOggettoPartita(idPartita).getPokemonSfidante1());
+		creazioneNuovoRound(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante);
 // al posto del for, un do while senza il break, per permettere di passare al  round successivo 
-			for (int i = 0; i < 5; i++) {
-				duplicateRow(idPartita);
-				aggiornaVitaCreatore(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante);
-				if (!aggiornaVitaSfidante(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante)) {
-					System.out.println("Giustino ha vinto");
-				}
-				System.out.println("Turno di Giustino");
-				Thread.sleep(200);
-				duplicateRow(idPartita);
-				aggiornaVitaSfidante(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante);
-				if (!aggiornaVitaCreatore(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante)) {
-					System.out.println("Giustino ha perso");
-				}
-				System.out.println("Turno dell'avversario");
-				Thread.sleep(200);
+		for (int i = 0; i < 5; i++) {
+			duplicateRow(idPartita);
+			aggiornaVitaCreatore(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante);
+			if (!aggiornaVitaSfidante(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante)) {
+				System.out.println("Giustino ha vinto");
 			}
-			break;
+			System.out.println("Turno di Giustino");
+			Thread.sleep(200);
+			duplicateRow(idPartita);
+			aggiornaVitaSfidante(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante);
+			if (!aggiornaVitaCreatore(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante)) {
+				System.out.println("Giustino ha perso");
+			}
+			System.out.println("Turno dell'avversario");
+			Thread.sleep(200);
 		}
 
-		case 2: {
-			creazioneNuovoRound(idPartita,
-					retrievePokemonPartitaCreatore(retrieveOggettoPartita(idPartita).getPokemonCreatore2()),
-					retrievePokemonPartitaSfidante(retrieveOggettoPartita(idPartita).getPokemonSfidante2()));
+		creazioneNuovoRound(idPartita,
+				retrievePokemonPartitaCreatore(retrieveOggettoPartita(idPartita).getPokemonCreatore2()),
+				retrievePokemonPartitaSfidante(retrieveOggettoPartita(idPartita).getPokemonSfidante2()));
 
-		}
-		case 3: {
-			creazioneNuovoRound(idPartita,
-					retrievePokemonPartitaCreatore(retrieveOggettoPartita(idPartita).getPokemonCreatore3()),
-					retrievePokemonPartitaSfidante(retrieveOggettoPartita(idPartita).getPokemonSfidante3()));
-			break;
-		}
-		}
+		creazioneNuovoRound(idPartita,
+				retrievePokemonPartitaCreatore(retrieveOggettoPartita(idPartita).getPokemonCreatore3()),
+				retrievePokemonPartitaSfidante(retrieveOggettoPartita(idPartita).getPokemonSfidante3()));
 
 	}
 
@@ -156,10 +147,6 @@ public class Gestione {
 			return true;
 		}
 		return false;
-	}
-
-	public void evolviPokemon(int idPokemon) {
-
 	}
 
 	public boolean aggiornaVitaCreatore(int idPartita, Pokemon pokemonCreatore, Pokemon pokemonSfidante)
