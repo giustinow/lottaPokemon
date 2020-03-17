@@ -95,16 +95,16 @@ public class Pokemon {
 		return this.getAttacco();
 	}
 	public double attaccoScarso() {
-		return this.attacco/2;
-	}
+		return this.getAttacco()/2;
+	}//38,5 - 
 	public int difesaForte(Pokemon pokemon) {
-		return (int) (((pokemon.getAttacco() * 0.5) - this.difesa) - ((this.resistenza * 0.01)*((pokemon.getAttacco() * 0.5) - this.difesa)));
+		return (int) ((pokemon.attaccoScarso() - this.difesa) - ((this.resistenza * 0.01)*(pokemon.attaccoScarso() - this.difesa)));
 	}
 	public int difesaNormale(Pokemon pokemon) {
-		return (int) (( pokemon.getAttacco()- this.difesa) - ((this.resistenza * 0.01)* (pokemon.getAttacco() - this.difesa)));
+		return (int) ((pokemon.getAttacco() - this.difesa) - ((this.resistenza * 0.01) * (pokemon.getAttacco() - this.difesa)));
 	}
 	public int difesaScarsa(Pokemon pokemon) {
-		return (int) (((pokemon.getAttacco() * 2) - this.difesa) - ((this.resistenza * 0.01)*((pokemon.getAttacco() * 2) - this.difesa)));
+		return (int) ((pokemon.attaccoForte() - this.difesa) - ((this.resistenza * 0.01)*(pokemon.attaccoForte() - this.difesa)));
 	}
 	public boolean vantaggioTipoPokemon(Pokemon pokemon) {
 		if(this.getTipo().equals("acqua")){
@@ -116,7 +116,7 @@ public class Pokemon {
 				return true;
 			}return false;
 		}else if(this.getTipo().equals("aria")) {
-			if(pokemon.getTipo().equals("fuoco") || pokemon.getTipo().equals("acqua")) {
+			if(pokemon.getTipo().equals("fuoco") || pokemon.getTipo().equals("acqua")) { 
 				return true;
 			}return false;
 		}else {

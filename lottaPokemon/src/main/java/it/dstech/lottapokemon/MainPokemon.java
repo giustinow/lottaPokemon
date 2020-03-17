@@ -68,6 +68,7 @@ public class MainPokemon {
 				gestione.iniziaNuovoScontro(idPartita);
 				break;
 			}
+
 			}
 		}
 	}
