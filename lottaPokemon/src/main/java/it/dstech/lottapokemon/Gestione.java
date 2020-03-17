@@ -97,7 +97,7 @@ public class Gestione {
 			Pokemon retrievePokemonPartitaSfidante = retrievePokemonPartitaSfidante(
 					retrieveOggettoPartita(idPartita).getPokemonSfidante1());
 			creazioneNuovoRound(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante);
-// al posto del for, un do while senza il break, per permettere di passare al round successivo
+// al posto del for, un do while senza il break, per permettere di passare al  round successivo
 			for (int i = 0; i < 5; i++) {
 				duplicateRow(idPartita);
 				aggiornaVitaCreatore(idPartita, retrievePokemonPartitaCreatore, retrievePokemonPartitaSfidante);
