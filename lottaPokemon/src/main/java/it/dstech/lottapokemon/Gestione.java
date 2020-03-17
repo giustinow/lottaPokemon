@@ -82,7 +82,7 @@ public class Gestione {
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
 		prepareStatement.setString(1, retrieveOggettoPartita(idPartita).getIdCreatore());
 		prepareStatement.setString(2, pokemonCreatore.getNome());
-		prepareStatement.setString(3, pokemonSfidante.getNome());
+		prepareStatement.setString(3, pokemonSfidante.getNome()); 
 		prepareStatement.setInt(4, idPartita);
 		prepareStatement.setInt(5, pokemonCreatore.getHp());
 		prepareStatement.setInt(6, pokemonSfidante.getHp());
