@@ -5,13 +5,17 @@ private int idPartita ;
 private String idUtente;
 private String pokemonCreatore;
 private String pokemonSfidante;
+private int hpCreatore;
+private int hpSfidante;
 
-public Scontro(int idPartita, String idUtente, String pokemonCreatore, String pokemonSfidante) {
+public Scontro(int idPartita, String idUtente, String pokemonCreatore, String pokemonSfidante, int hpCreatore, int hpSfidante) {
 	super();
 	this.idPartita = idPartita;
 	this.idUtente = idUtente;
 	this.pokemonCreatore = pokemonCreatore;
 	this.pokemonSfidante = pokemonSfidante;
+	this.hpCreatore = hpCreatore;
+	this.hpSfidante = hpSfidante;
 }
 
 public int getIdPartita() {
@@ -37,6 +41,22 @@ public String getPokemonSfidante() {
 }
 public void setPokemonSfidante(String pokemonSfidante) {
 	this.pokemonSfidante = pokemonSfidante;
+}
+
+public int getHpSfidante() {
+	return hpSfidante;
+}
+
+public void setHpSfidante(int hpSfidante) {
+	this.hpSfidante = hpSfidante;
+}
+
+public int getHpCreatore() {
+	return hpCreatore;
+}
+
+public void setHpCreatore(int hpCreatore) {
+	this.hpCreatore = hpCreatore;
 }
 
 }

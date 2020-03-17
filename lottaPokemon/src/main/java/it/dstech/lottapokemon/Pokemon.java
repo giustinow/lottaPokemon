@@ -97,14 +97,14 @@ public class Pokemon {
 	public double attaccoScarso() {
 		return this.attacco/2;
 	}
-	public int difesaForte() {
-		return (int) (((this.attacco * 0.5) - this.difesa) - ((this.resistenza * 0.01)*(this.attacco * 0.5) - this.difesa));
+	public int difesaForte(Pokemon pokemon) {
+		return (int) (((pokemon.getAttacco() * 0.5) - this.difesa) - ((this.resistenza * 0.01)*((pokemon.getAttacco() * 0.5) - this.difesa)));
 	}
-	public int difesaNormale() {
-		return (int) ((this.attacco - this.difesa) - ((this.resistenza * 0.01)*(this.attacco) - this.difesa));
+	public int difesaNormale(Pokemon pokemon) {
+		return (int) (( pokemon.getAttacco()- this.difesa) - ((this.resistenza * 0.01)* (pokemon.getAttacco() - this.difesa)));
 	}
-	public int difesaScarsa() {
-		return (int) (((this.attacco * 2) - this.difesa) - ((this.resistenza * 0.01)*(this.attacco * 2) - this.difesa));
+	public int difesaScarsa(Pokemon pokemon) {
+		return (int) (((pokemon.getAttacco() * 2) - this.difesa) - ((this.resistenza * 0.01)*((pokemon.getAttacco() * 2) - this.difesa)));
 	}
 	public boolean vantaggioTipoPokemon(Pokemon pokemon) {
 		if(this.getTipo().equals("acqua")){

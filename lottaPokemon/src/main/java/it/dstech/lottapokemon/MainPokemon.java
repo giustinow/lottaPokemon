@@ -65,7 +65,7 @@ public class MainPokemon {
 				gestione.retrievePartita();
 				int idPartita = input.nextInt();
 				input.nextLine();  
-				gestione.creaSfidaPokemon(idPartita);
+				gestione.iniziaNuovoScontro(idPartita);
 				break;
 			}
 			}
@@ -212,10 +212,10 @@ public class MainPokemon {
 		System.out.println("3. Rimuovi il Pokemon dal centro Pokemon");
 		System.out.println("4. Rimuovi utente registrato");
 		System.out.println("5. Stampa la lista dei Pokemon");
-		System.out.println("6. Stampa la lista dei Pokemon");
+		System.out.println("6. Stampa la lista degli utenti");
 		System.out.println("7. Crea una nuova partita");
 		System.out.println("8. Partecipa ad una partita");
-		System.out.println("9. Crea la partita");
+		System.out.println("9. Inizia una battaglia tra pokemon");
 		System.out.println("************************************************************************");
 
 	}
