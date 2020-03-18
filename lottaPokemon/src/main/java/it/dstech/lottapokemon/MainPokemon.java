@@ -61,18 +61,51 @@ public class MainPokemon {
 				break;
 			}
 			case 9: {
-				System.out.println("Scegli l'ID della partita");
-				gestione.retrievePartita();
-				int idPartita = input.nextInt();
-				input.nextLine(); 
-				if(gestione.iniziaNuovoScontro(idPartita)) {
-					
-				}
+				scontroPokemonEdEvoluzione(input, gestione);
 				break;
+			}
+			default: {
+				System.out.println("Fine");
+				input.close();
+				System.exit(0);
 			}
 
 			}
 		}
+	}
+
+	public static void scontroPokemonEdEvoluzione(Scanner input, Gestione gestione)
+			throws SQLException, InterruptedException {
+		System.out.println("Scegli l'ID della partita");
+		gestione.retrievePartita();
+		int idPartita = input.nextInt();
+		input.nextLine();
+		if (gestione.iniziaNuovoScontro(idPartita)) {
+			System.out.println("Questo torneo l'ha vinto Giustino");
+			evoluzionePokemon(input, gestione, idPartita);
+		}else {
+			System.out.println("Purtroppo questo torneo Giustino l'ha perso");
+		}
+	}
+
+	public static boolean evoluzionePokemon(Scanner input, Gestione gestione, int idPartita) throws SQLException {
+		System.out.println(
+				"Giustino hai avuto la possibilità di evolvere il tuo pokemon allo stadio evolutivo successivo. \n Vuoi evolvere il tuo Pokemon? \n 1.Si \n 2.No");
+		int confermaEvoluzione = input.nextInt();
+		input.nextLine();
+		if (confermaEvoluzione == 1) {
+			System.out.println("Scegli l'ID del Pokemon che vuoi evolvere: ");
+			gestione.retrieveListaPokemonPartita(idPartita);
+			int sceltaIdPokemon = input.nextInt();
+			input.nextLine();
+			gestione.evolviPokemon(sceltaIdPokemon);
+			System.out.println("Evoluzione Avvenuta con successo! \nEcco la lista dei tuoi digimon. ");
+			gestione.retrievePokemon();
+			return true;
+		}System.out.println("Hai buttato l'opportunità di evolvere il tuo pokemon");
+		return false;
+		
+		
 	}
 
 	private static Partita partecipaPartita(Scanner input, Gestione gestione) throws SQLException {
@@ -89,7 +122,7 @@ public class MainPokemon {
 		System.out.println("Inserisci il 3°");
 		int ds3 = input.nextInt();
 		input.nextLine();
-		return new Partita(idPartita, sceltaUtente.getId(), "", ds1, ds2, ds3, 0,0, 0) ;
+		return new Partita(idPartita, sceltaUtente.getId(), "", ds1, ds2, ds3, 0, 0, 0);
 	}
 
 	public static Partita creaPartita(Scanner input, Gestione gestione) throws SQLException {
@@ -104,7 +137,7 @@ public class MainPokemon {
 		int dc2 = input.nextInt();
 		System.out.println("Inserisci il 3°");
 		int dc3 = input.nextInt();
-		return new Partita(idPartita, sceltaUtente.getId(), "", dc1, dc2, dc3, 0,0, 0);
+		return new Partita(idPartita, sceltaUtente.getId(), "", dc1, dc2, dc3, 0, 0, 0);
 	}
 
 	public static Utente sceltaUtente(Scanner input, Gestione gestione) throws SQLException {
@@ -149,7 +182,7 @@ public class MainPokemon {
 		System.out.println("Inserisci l'ID del proprietario del Pokemon (idUtente)");
 		String nomeProprietario = input.nextLine();
 		String tipoPokemon = tipoPokemon(input);
-		return new Pokemon(idPokemon,nome, hp, attacco, difesa, resistenza, evoluzione, nomeProprietario, tipoPokemon);
+		return new Pokemon(idPokemon, nome, hp, attacco, difesa, resistenza, evoluzione, nomeProprietario, tipoPokemon);
 	}
 
 	public static String tipoPokemon(Scanner input) {
@@ -219,6 +252,7 @@ public class MainPokemon {
 		System.out.println("7. Crea una nuova partita");
 		System.out.println("8. Partecipa ad una partita");
 		System.out.println("9. Inizia una battaglia tra pokemon");
+		System.out.println("10. Fine");
 		System.out.println("************************************************************************");
 
 	}

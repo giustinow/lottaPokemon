@@ -97,6 +97,7 @@ public class Pokemon {
 	public double attaccoScarso() {
 		return this.getAttacco()/2;
 	}//38,5 - 
+
 	public int difesaPokemon(int attacco) {
 		return (int) ((attacco - this.getDifesa()) - ((attacco - this.getDifesa()) * this.getResistenza() * 0.01)); 
 	}
