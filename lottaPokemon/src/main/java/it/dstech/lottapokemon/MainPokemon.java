@@ -64,8 +64,10 @@ public class MainPokemon {
 				System.out.println("Scegli l'ID della partita");
 				gestione.retrievePartita();
 				int idPartita = input.nextInt();
-				input.nextLine();  
-				gestione.iniziaNuovoScontro(idPartita);
+				input.nextLine(); 
+				if(gestione.iniziaNuovoScontro(idPartita)) {
+					
+				}
 				break;
 			}
 

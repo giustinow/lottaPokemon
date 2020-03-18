@@ -8,11 +8,11 @@ public class Pokemon {
 	private double difesa;
 	private double resistenza;
 	private String evoluzione;
-	private String proprietario;
 	private String tipo;
+	private String proprietario;
 
 	public Pokemon(int id, String nome, int hp, int attacco, double difesa, double resistenza, String evoluzione,
-			String proprietario, String tipo) {
+			 String tipo, String proprietario) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -21,8 +21,8 @@ public class Pokemon {
 		this.difesa = difesa;
 		this.resistenza = resistenza;
 		this.evoluzione = evoluzione;
-		this.proprietario = proprietario;
 		this.tipo = tipo;
+		this.proprietario = proprietario;
 	}
 
 	public String getProprietario() {
@@ -97,14 +97,8 @@ public class Pokemon {
 	public double attaccoScarso() {
 		return this.getAttacco()/2;
 	}//38,5 - 
-	public int difesaForte(Pokemon pokemon) {
-		return (int) ((pokemon.attaccoScarso() - this.difesa) - ((this.resistenza * 0.01)*(pokemon.attaccoScarso() - this.difesa)));
-	}
-	public int difesaNormale(Pokemon pokemon) {
-		return (int) ((pokemon.getAttacco() - this.difesa) - ((this.resistenza * 0.01) * (pokemon.getAttacco() - this.difesa)));
-	}
-	public int difesaScarsa(Pokemon pokemon) {
-		return (int) ((pokemon.attaccoForte() - this.difesa) - ((this.resistenza * 0.01)*(pokemon.attaccoForte() - this.difesa)));
+	public int difesaPokemon(int attacco) {
+		return (int) ((attacco - this.getDifesa()) - ((attacco - this.getDifesa()) * this.getResistenza() * 0.01)); 
 	}
 	public boolean vantaggioTipoPokemon(Pokemon pokemon) {
 		if(this.getTipo().equals("acqua")){
@@ -119,17 +113,24 @@ public class Pokemon {
 			if(pokemon.getTipo().equals("fuoco") || pokemon.getTipo().equals("acqua")) { 
 				return true;
 			}return false;
-		}else {
+		}else {//Terra
 			if(pokemon.getTipo().equals("aria") || pokemon.getTipo().equals("acqua")) {
 				return true;
 			}return false;
 		}
 	}
+	public boolean uguaglianzaTipo(Pokemon pokemon) {
+		if(this.getTipo().equals(pokemon.getTipo())) {
+			return true;
+		}return false;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
+		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
 		return result;
 	}
 
@@ -144,13 +145,19 @@ public class Pokemon {
 		Pokemon other = (Pokemon) obj;
 		if (id != other.id)
 			return false;
+		if (tipo == null) {
+			if (other.tipo != null)
+				return false;
+		} else if (!tipo.equals(other.tipo))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Pokemon [nome=" + nome + ", hp=" + hp + ", attacco=" + attacco + ", difesa=" + difesa + ", resistenza="
-				+ resistenza + ", evoluzione=" + evoluzione + ", proprietario=" + proprietario + ", tipo=" + tipo + "]";
+		return "Pokemon [id=" + id + ", nome=" + nome + ", hp=" + hp + ", attacco=" + attacco + ", difesa=" + difesa
+				+ ", resistenza=" + resistenza + ", evoluzione=" + evoluzione + ", tipo=" + tipo + ", proprietario="
+				+ proprietario + "]";
 	}
 
 	public int getId() {
