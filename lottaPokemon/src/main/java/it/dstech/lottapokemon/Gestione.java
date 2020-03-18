@@ -88,7 +88,7 @@ public class Gestione {
 		prepareStatement.setInt(6, pokemonSfidante.getHp());
 		prepareStatement.execute();
 	}
-
+	//errore nell'update di aggiornavitacreatore e aggiornavitasfidante. da rivedere la query e anche il check del < 0
 	public void iniziaNuovoScontro(int idPartita) throws SQLException, InterruptedException {
 		int contaVinciteGiustino = 0;
 		System.out.println("          Inizio del primo round ");
@@ -96,6 +96,7 @@ public class Gestione {
 				retrieveOggettoPartita(idPartita).getPokemonCreatore1());
 		Pokemon retrievePokemonSfidantePrimoRound = retrievePokemonPartitaCreatore(
 				retrieveOggettoPartita(idPartita).getPokemonSfidante1());
+		creazioneNuovoRound(idPartita, retrievePokemonCreatorePrimoRound, retrievePokemonSfidantePrimoRound);
 		creazioneNuovoRound(idPartita, retrievePokemonCreatorePrimoRound, retrievePokemonSfidantePrimoRound);
 		do {
 			aggiornaVitaCreatore(idPartita, retrievePokemonCreatorePrimoRound, retrievePokemonSfidantePrimoRound);
@@ -119,10 +120,12 @@ public class Gestione {
 		} while (true);
 
 		System.out.println("          Inizio del secondo round");
+		emptyRow();
 		Pokemon retrievePokemonCreatoreSecondoRound = retrievePokemonPartitaCreatore(
 				retrieveOggettoPartita(idPartita).getPokemonCreatore2());
 		Pokemon retrievePokemonSfidanteSecondoRound = retrievePokemonPartitaCreatore(
 				retrieveOggettoPartita(idPartita).getPokemonSfidante2());
+		creazioneNuovoRound(idPartita, retrievePokemonCreatoreSecondoRound, retrievePokemonSfidanteSecondoRound);
 		creazioneNuovoRound(idPartita, retrievePokemonCreatoreSecondoRound, retrievePokemonSfidanteSecondoRound);
 		do {
 			aggiornaVitaCreatore(idPartita, retrievePokemonCreatoreSecondoRound, retrievePokemonSfidanteSecondoRound);
@@ -133,7 +136,7 @@ public class Gestione {
 			}
 			System.out.println("Turno di Giustino");
 			Thread.sleep(200);
-			aggiornaVitaSfidante(idPartita, retrievePokemonCreatoreSecondoRound, retrievePokemonSfidanteSecondoRound);
+			aggiornaVitaSfidante(idPartita, retrievePokemonSfidanteSecondoRound, retrievePokemonCreatoreSecondoRound);
 			duplicateRow(idPartita);
 			System.out.println("Turno dell'avversario");
 			if (!verificaHpPokemonDifesa()) {
@@ -144,10 +147,12 @@ public class Gestione {
 			Thread.sleep(200);
 		} while (true);
 		System.out.println("          Inizio dell'ultimo round");
+		emptyRow();
 		Pokemon retrievePokemonCreatoreTerzoRound = retrievePokemonPartitaCreatore(
 				retrieveOggettoPartita(idPartita).getPokemonCreatore3());
 		Pokemon retrievePokemonSfidanteTerzoRound = retrievePokemonPartitaCreatore(
 				retrieveOggettoPartita(idPartita).getPokemonSfidante3());
+		creazioneNuovoRound(idPartita, retrievePokemonCreatoreTerzoRound, retrievePokemonSfidanteTerzoRound);
 		creazioneNuovoRound(idPartita, retrievePokemonCreatoreTerzoRound, retrievePokemonSfidanteTerzoRound);
 		do {
 			aggiornaVitaCreatore(idPartita, retrievePokemonCreatoreTerzoRound, retrievePokemonSfidanteTerzoRound);
@@ -158,7 +163,7 @@ public class Gestione {
 			}
 			System.out.println("Turno di Giustino");
 			Thread.sleep(200);
-			aggiornaVitaSfidante(idPartita, retrievePokemonCreatoreTerzoRound, retrievePokemonSfidanteTerzoRound);
+			aggiornaVitaSfidante(idPartita, retrievePokemonSfidanteTerzoRound, retrievePokemonCreatoreTerzoRound);
 			duplicateRow(idPartita);
 			System.out.println("Turno dell'avversario");
 			if (!verificaHpPokemonDifesa()) {
@@ -185,10 +190,21 @@ public class Gestione {
 		}
 		return (int) pokemonCreatore.difesaScarsa(pokemonAvversario);
 	}
-
+	public void emptyRow() throws SQLException {
+		String queryInserimentoScontro = "INSERT INTO L4RZNtuhbB.Scontro_JustineProva (`OWNER`, `digimonA`, `digimonD`, `idpartita`, `HPdigimonA`, `HPdigimonD`) VALUES (?,?,?,?,?,?);";
+		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
+		prepareStatement.setString(1, " ");
+		prepareStatement.setString(2, " ");
+		prepareStatement.setString(3, " ");
+		prepareStatement.setInt(4, 0);
+		prepareStatement.setInt(5, 0);
+		prepareStatement.setInt(6, 0);
+		prepareStatement.execute();
+}
+	
 	public void aggiornaVitaSfidante(int idPartita, Pokemon pokemonCreatore, Pokemon pokemonSfidante)
 			throws SQLException {
-		String queryInserimentoScontro = "UPDATE L4RZNtuhbB.Scontro_JustineProva SET OWNER = ?, digimonA = ?, digimonD = ?, idpartita = ?, HPdigimonA =(@temp:=HPdigimonA), HPdigimonA = HPdigimonD, HPdigimonD = @temp - ? ORDER BY idmossa DESC LIMIT 1;";
+		String queryInserimentoScontro = "UPDATE L4RZNtuhbB.Scontro_JustineProva SET OWNER = ?, digimonA = ?, digimonD = ?, idpartita = ?, HPdigimonA = HPdigimonA, HPdigimonD = HPdigimonD - ? ORDER BY idmossa DESC LIMIT 1;";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
 			prepareStatement.setString(1, retrieveOggettoPartita(idPartita).getIdSfidante());
 			prepareStatement.setString(2, pokemonCreatore.getNome());
@@ -200,7 +216,7 @@ public class Gestione {
 
 	public void aggiornaVitaCreatore(int idPartita, Pokemon pokemonCreatore, Pokemon pokemonSfidante)
 			throws SQLException {
-		String queryInserimentoScontro = "UPDATE L4RZNtuhbB.Scontro_JustineProva SET OWNER = ?, digimonA = ?, digimonD = ?, idpartita = ?, HPdigimonA =(@temp:=HPdigimonA), HPdigimonA = HPdigimonD, HPdigimonD = @temp - ? ORDER BY idmossa DESC LIMIT 1;";
+		String queryInserimentoScontro = "UPDATE L4RZNtuhbB.Scontro_JustineProva SET OWNER = ?, digimonA = ?, digimonD = ?, idpartita = ?, HPdigimonA = HPdigimonA - ? , HPdigimonD = HPdigimonD ORDER BY idmossa DESC LIMIT 1;";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
 		
 			prepareStatement.setString(1, retrieveOggettoPartita(idPartita).getIdCreatore());
