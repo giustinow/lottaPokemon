@@ -52,15 +52,19 @@ public class MainPokemon {
 				gestione.retrieveUtente();
 				break;
 			}
-			case 7: {
-				gestione.insertCreaPartita(creaPartita(input, gestione));
+			case 7:{
+				gestione.retrievePartita();
 				break;
 			}
 			case 8: {
-				gestione.insertPartecipaPartita(partecipaPartita(input, gestione));
+				gestione.insertCreaPartita(creaPartita(input, gestione));
 				break;
 			}
 			case 9: {
+				gestione.insertPartecipaPartita(partecipaPartita(input, gestione));
+				break;
+			}
+			case 10: {
 				scontroPokemonEdEvoluzione(input, gestione);
 				break;
 			}
@@ -80,12 +84,14 @@ public class MainPokemon {
 		gestione.retrievePartita();
 		int idPartita = input.nextInt();
 		input.nextLine();
-		if (gestione.iniziaNuovoScontro(idPartita)) {
-			System.out.println("Questo torneo l'ha vinto Giustino");
-			evoluzionePokemon(input, gestione, idPartita);
-		}else {
-			System.out.println("Purtroppo questo torneo Giustino l'ha perso");
-		}
+		if (!gestione.checkEsistenzaIdPartita(idPartita)) {
+			if (gestione.iniziaNuovoScontro(idPartita)) {
+				System.out.println("Questo torneo l'ha vinto Giustino");
+				evoluzionePokemon(input, gestione, idPartita);
+			} else {
+				System.out.println("Purtroppo questo torneo Giustino l'ha perso");
+			}
+		}else System.out.println("Partita insesistente");
 	}
 
 	public static boolean evoluzionePokemon(Scanner input, Gestione gestione, int idPartita) throws SQLException {
@@ -102,10 +108,10 @@ public class MainPokemon {
 			System.out.println("Evoluzione Avvenuta con successo! \nEcco la lista dei tuoi digimon. ");
 			gestione.retrievePokemon();
 			return true;
-		}System.out.println("Hai buttato l'opportunità di evolvere il tuo pokemon");
+		}
+		System.out.println("Hai buttato l'opportunità di evolvere il tuo pokemon");
 		return false;
-		
-		
+
 	}
 
 	private static Partita partecipaPartita(Scanner input, Gestione gestione) throws SQLException {
@@ -128,7 +134,10 @@ public class MainPokemon {
 	public static Partita creaPartita(Scanner input, Gestione gestione) throws SQLException {
 		System.out.println("Inserisci l'ID della partita");// id partita e id creatore a cosa corrispondono?
 		int idPartita = input.nextInt();
+		input.nextLine();
+		
 		Utente sceltaUtente = sceltaUtente(input, gestione);
+		if(!gestione.checkPersona(sceltaUtente)) {
 		System.out.println("Scegli i 3 pokemon che devono combattere");
 		gestione.retrievePokemonUtente(sceltaUtente);
 		System.out.println("Inserisci il 1°");
@@ -138,6 +147,8 @@ public class MainPokemon {
 		System.out.println("Inserisci il 3°");
 		int dc3 = input.nextInt();
 		return new Partita(idPartita, sceltaUtente.getId(), "", dc1, dc2, dc3, 0, 0, 0);
+		}System.out.println("L'utente che hai messo è inesistente");
+		return null;
 	}
 
 	public static Utente sceltaUtente(Scanner input, Gestione gestione) throws SQLException {
@@ -243,16 +254,17 @@ public class MainPokemon {
 	public static void menu() {
 		System.out.println("************************************************************************");
 		System.out.println("Scegli cosa fare");
-		System.out.println("1. Registra utente");
+		System.out.println("1. Registra un nuovo utente");
 		System.out.println("2. Inserisci un nuovo Pokemon da mettere al centro Pokemon");
 		System.out.println("3. Rimuovi il Pokemon dal centro Pokemon");
 		System.out.println("4. Rimuovi utente registrato");
 		System.out.println("5. Stampa la lista dei Pokemon");
 		System.out.println("6. Stampa la lista degli utenti");
-		System.out.println("7. Crea una nuova partita");
-		System.out.println("8. Partecipa ad una partita");
-		System.out.println("9. Inizia una battaglia tra pokemon");
-		System.out.println("10. Fine");
+		System.out.println("7. Stampa la lista delle lobby");
+		System.out.println("8. Crea una nuova lobby");
+		System.out.println("9. Partecipa ad una lobby");
+		System.out.println("10. Inizia la battaglia tra pokemon");
+		System.out.println("11. Fine");
 		System.out.println("************************************************************************");
 
 	}
