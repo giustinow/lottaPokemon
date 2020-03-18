@@ -239,7 +239,7 @@ public class Gestione {
 	}
 
 	public void evolviPokemon(int idPokemon) throws SQLException {
-		String queryInserimentoScontro = "UPDATE L4RZNtuhbB.digimon_JustineProva SET EVO = ? where iddigimon = ?";
+		String queryInserimentoScontro = "UPDATE L4RZNtuhbB.digimon_JustineProva SET HP = HP + HP * 0.1, ATK = ATK + ATK * 0.1, DEF = DEF + DEF * 0.1, RES = RES + RES * 0.1, EVO = ? where iddigimon = ?";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
 		if (checkEvoluzione(idPokemon)) {
 			prepareStatement.setString(1, "Seconda");

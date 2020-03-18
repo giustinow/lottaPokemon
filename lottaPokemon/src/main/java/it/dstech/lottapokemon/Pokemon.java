@@ -12,7 +12,7 @@ public class Pokemon {
 	private String proprietario;
 
 	public Pokemon(int id, String nome, int hp, int attacco, double difesa, double resistenza, String evoluzione,
-			 String tipo, String proprietario) {
+			String tipo, String proprietario) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -88,42 +88,52 @@ public class Pokemon {
 	public void setEvoluzione(String evoluzione) {
 		this.evoluzione = evoluzione;
 	}
+
 	public double attaccoForte() {
 		return this.getAttacco() * 2;
 	}
+
 	public double attaccoNormale() {
 		return this.getAttacco();
 	}
+
 	public double attaccoScarso() {
-		return this.getAttacco()/2;
-	}//38,5 - 
+		return this.getAttacco() / 2;
+	}// 38,5 -
 
 	public int difesaPokemon(int attacco) {
-		return (int) ((attacco - this.getDifesa()) - ((attacco - this.getDifesa()) * this.getResistenza() * 0.01)); 
+		return (int) ((attacco - this.getDifesa()) - ((attacco - this.getDifesa()) * this.getResistenza() * 0.01));
 	}
+
 	public boolean vantaggioTipoPokemon(Pokemon pokemon) {
-		if(this.getTipo().equals("acqua")){
-			if(pokemon.getTipo().equals("terra") || pokemon.getTipo().equals("fuoco")) {
+		if (this.getTipo().equals("acqua")) {
+			if (pokemon.getTipo().equals("terra") || pokemon.getTipo().equals("fuoco")) {
 				return true;
-			}return false;
-		}else if(this.getTipo().equals("fuoco")) {
-			if(pokemon.getTipo().equals("terra") || pokemon.getTipo().equals("aria")) {
+			}
+			return false;
+		} else if (this.getTipo().equals("fuoco")) {
+			if (pokemon.getTipo().equals("terra") || pokemon.getTipo().equals("aria")) {
 				return true;
-			}return false;
-		}else if(this.getTipo().equals("aria")) {
-			if(pokemon.getTipo().equals("fuoco") || pokemon.getTipo().equals("acqua")) { 
+			}
+			return false;
+		} else if (this.getTipo().equals("aria")) {
+			if (pokemon.getTipo().equals("fuoco") || pokemon.getTipo().equals("acqua")) {
 				return true;
-			}return false;
-		}else {//Terra
-			if(pokemon.getTipo().equals("aria") || pokemon.getTipo().equals("acqua")) {
+			}
+			return false;
+		} else {// Terra
+			if (pokemon.getTipo().equals("aria") || pokemon.getTipo().equals("acqua")) {
 				return true;
-			}return false;
+			}
+			return false;
 		}
 	}
+
 	public boolean uguaglianzaTipo(Pokemon pokemon) {
-		if(this.getTipo().equals(pokemon.getTipo())) {
+		if (this.getTipo().equals(pokemon.getTipo())) {
 			return true;
-		}return false;
+		}
+		return false;
 	}
 
 	@Override
