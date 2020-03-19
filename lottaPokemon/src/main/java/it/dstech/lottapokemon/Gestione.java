@@ -218,7 +218,7 @@ public class Gestione {
 		String queryInserimentoScontro = "UPDATE L4RZNtuhbB.digimon_JustineProva SET HP = HP + HP * 0.1, ATK = ATK + ATK * 0.1, DEF = DEF + DEF * 0.1, RES = RES + RES * 0.1, EVO = ? where iddigimon = ?";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryInserimentoScontro);
 		if (checkEvoluzione(idPokemon)) {
-			prepareStatement.setString(1, "Seconda");
+			prepareStatement.setString(1, "econda");
 			prepareStatement.setInt(2, idPokemon);
 			prepareStatement.execute();
 			return;
@@ -353,7 +353,7 @@ public class Gestione {
 	public Partita retrieveOggettoPartita(int idPartita) throws SQLException {// con la correzione di ieri mi dava
 		// comunque un nullpointer exception
 		ResultSet risultatoQueryCreatore = statement.executeQuery(
-				"select idcreatore,idsfidante, dc1, dc2, dc3, ds1, ds2, ds3 from L4RZNtuhbB.Partite where idpartita = \""
+				"select idcreatore,idsfidante, dc1, dc2, dc3, ds1, ds2, ds3 from L4RZNtuhbB.Partite_JustineProva where idpartita = \""
 						+ idPartita + "\"");
 		String idCreatore = "";
 		int digimonCreatore1 = 0;
@@ -461,7 +461,7 @@ public class Gestione {
 	}
 
 	public void deletePokemon(int id) throws SQLException {
-		String queryEliminaPokemon = "DELETE FROM `L4RZNtuhbB`.`digimon` WHERE iddigimon = ?;";
+		String queryEliminaPokemon = "DELETE FROM L4RZNtuhbB.digimon_JustineProva WHERE iddigimon = ?;";
 		PreparedStatement prepareStatement = connessione.prepareStatement(queryEliminaPokemon);
 		prepareStatement.setInt(1, id);
 		prepareStatement.execute();

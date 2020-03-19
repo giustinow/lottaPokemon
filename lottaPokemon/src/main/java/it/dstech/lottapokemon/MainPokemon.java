@@ -15,25 +15,13 @@ public class MainPokemon {
 			switch (scelta) {
 			case 1: {
 				Utente nuovoUtente = nuovoUtente(input);
-				if (gestione.checkPersona(nuovoUtente)) {
-					gestione.insertUtente(nuovoUtente);
-				} else {
-					System.out.println("Utente già registrato");
-				}
+				inserisciUtente(gestione, nuovoUtente);
 				break;
 			}
 			case 2: {
 				Utente sceltaUtente = sceltaUtente(input, gestione);
 				Pokemon nuovoPokemon = nuovoPokemon(input);
-				if (!gestione.checkPersona(sceltaUtente)) {
-					if (gestione.checkPokemon(nuovoPokemon)) {
-						gestione.insertPokemon(nuovoPokemon, sceltaUtente);
-					} else {
-						System.out.println("Pokemon già presente");
-					}
-				} else {
-					System.out.println("Id inesistente");
-				}
+				inserisciPokemon(gestione, sceltaUtente, nuovoPokemon);
 				break;
 			}
 			case 3: {
@@ -78,6 +66,27 @@ public class MainPokemon {
 		}
 	}
 
+	public static void inserisciPokemon(Gestione gestione, Utente sceltaUtente, Pokemon nuovoPokemon)
+			throws SQLException {
+		if (!gestione.checkPersona(sceltaUtente)) {
+			if (gestione.checkPokemon(nuovoPokemon)) {
+				gestione.insertPokemon(nuovoPokemon, sceltaUtente);
+			} else {
+				System.out.println("Pokemon già presente");
+			}
+		} else {
+			System.out.println("Id inesistente");
+		}
+	}
+
+	public static void inserisciUtente(Gestione gestione, Utente nuovoUtente) throws SQLException {
+		if (gestione.checkPersona(nuovoUtente)) {
+			gestione.insertUtente(nuovoUtente);
+		} else {
+			System.out.println("Utente già registrato");
+		}
+	}
+
 	public static void scontroPokemonEdEvoluzione(Scanner input, Gestione gestione)
 			throws SQLException, InterruptedException {
 		System.out.println("Scegli l'ID della partita");
@@ -117,6 +126,7 @@ public class MainPokemon {
 	private static Partita partecipaPartita(Scanner input, Gestione gestione) throws SQLException {
 		System.out.println("Inserisci l'id della partita in cui vuoi partecipare");
 		int idPartita = input.nextInt();
+		input.nextLine();
 		Utente sceltaUtente = sceltaUtente(input, gestione);
 		gestione.retrievePokemonUtente(sceltaUtente);
 		System.out.println("Inserisci il 1°");
